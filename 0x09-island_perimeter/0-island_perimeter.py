@@ -3,23 +3,21 @@
 
 
 def island_perimeter(grid):
-    # Initialize perimeter
+    """returns the perimeter of the island described in grid"""
     perimeter = 0
-
-    # Iterate over each cell in the grid
     for i in range(len(grid)):
         for j in range(len(grid[i])):
-            # If the cell is land
             if grid[i][j] == 1:
-                # Add 4 to the perimeter
-                perimeter += 4
-
-                # If the cell to the left is land, subtract 2 from the perimeter
-                if i > 0 and grid[i - 1][j] == 1:
-                    perimeter -= 2
-
-                # If the cell above is land, subtract 2 from the perimeter
-                if j > 0 and grid[i][j - 1] == 1:
-                    perimeter -= 2
-
+                # up
+                if i == 0 or grid[i - 1][j] == 0:
+                    perimeter += 1
+                # down
+                if i == len(grid) - 1 or grid[i + 1][j] == 0:
+                    perimeter += 1
+                # left
+                if j == 0 or grid[i][j - 1] == 0:
+                    perimeter += 1
+                # right
+                if j == len(grid[i]) - 1 or grid[i][j + 1] == 0:
+                    perimeter += 1
     return perimeter

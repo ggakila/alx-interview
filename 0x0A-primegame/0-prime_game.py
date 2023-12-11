@@ -13,29 +13,26 @@ def is_winner(x, nums):
     """
     if not nums or x < 1:
         return None
+    largets_num = max(nums)
 
-    largest_number = max(nums)
-    prime_filter = [True] * max(largest_number + 1, 2)
-    for i in range(2, int(pow(largest_number, 0.5)) + 1):
-        if not prime_filter[i]:
+    filtered_nums = [True for _ in range(max(largets_num + 1, 2))]
+    for i in range(2, int(pow(largets_num, 0.5)) + 1):
+        if not filtered_nums[i]:
             continue
-        for j in range(i * i, largest_number + 1, i):
-            prime_filter[j] = False
-    prime_filter[0] = prime_filter[1] = False
-
-    prime_count = 0
-    for i in range(len(prime_filter)):
-        if prime_filter[i]:
-            prime_count += 1
-        prime_filter[i] = prime_count
-
-    maria_wins = 0
-    for number in nums:
-        maria_wins += prime_filter[number] % 2 == 1
-
-    if maria_wins * 2 == len(nums):
+        for j in range(i * i, largets_num + 1, i):
+            filtered_nums[j] = False
+    filtered_nums[0] = filtered_nums[1] = False
+    y = 0
+    for i in range(len(filtered_nums)):
+        if filtered_nums[i]:
+            y += 1
+        filtered_nums[i] = y
+    player_1 = 0
+    for x in nums:
+        player_1 += filtered_nums[x] % 2 == 1
+    if player_1 * 2 == len(nums):
         return None
-    if maria_wins * 2 > len(nums):
+    if player_1 * 2 > len(nums):
         return "Maria"
     return "Ben"
 

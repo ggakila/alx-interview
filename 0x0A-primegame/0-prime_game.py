@@ -1,39 +1,43 @@
 #!/usr/bin/python3
 
-def isWinner(x, nums):
-    if not nums or x < 1:
-        return None
+# x is the number of rounds
+# nums is an array of n
 
-    def is_prime(num):
-        if num < 2:
+def is_prime(n):
+    if n <= 1:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
             return False
-        for i in range(2, int(num**0.5) + 1):
-            if num % i == 0:
-                return False
-        return True
+    return True
 
-    def play_game(n):
-        primes = [i for i in range(2, n+1) if is_prime(i)]
-        turn = 0  
-        while primes:
-            chosen_prime = primes[0]
-            primes = [p for p in primes if p % chosen_prime != 0]
-            turn = 1 - turn  
-        return turn  
+def sieve_of_eratosthenes(n):
+    primes = []
+    multiples = set()
+    for i in range(2, n+1):
+        if i not in multiples:
+            primes.append(i)
+            multiples.update(range(i*i, n+1, i))
+    return primes
 
+def isWinner(x, nums):
     maria_wins = 0
     ben_wins = 0
-
     for n in nums:
-        winner = play_game(n)
-        if winner == 0:
+        primes = sieve_of_eratosthenes(n)
+        
+        if len(primes) % 2 != 0:
             maria_wins += 1
-        elif winner == 1:
+        else:
             ben_wins += 1
-
     if maria_wins > ben_wins:
         return "Maria"
-    elif maria_wins < ben_wins:
+    elif ben_wins > maria_wins:
         return "Ben"
     else:
         return None
+
+
+x = 3
+nums = [4, 5, 1]
+print(isWinner(x, nums)) 

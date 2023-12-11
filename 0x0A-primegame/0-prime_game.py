@@ -2,15 +2,7 @@
 """Module for solving the prime game question."""
 
 def is_winner(x, nums):
-    """Determine the winner of the prime game.
-
-    Args:
-        x (of type int): represents the number of rounds.
-        nums (of type list): Numbers representing the game rounds.
-
-    Returns:
-        str: Returns Ben or Maria based on who won the most rounds or None if tied.
-    """
+    """Determine the winner of the prime game."""
     if not nums or x < 1:
         return None
     largets_num = max(nums)

@@ -1,54 +1,39 @@
 #!/usr/bin/python3
 
 def isWinner(x, nums):
-    winnerCounter = {'Maria': 0, 'Ben': 0}
-
-    for i in range(x):
-        roundWinner = isRoundWinner(nums[i], x)
-        if roundWinner is not None:
-            winnerCounter[roundWinner] += 1
-
-    if winnerCounter['Maria'] > winnerCounter['Ben']:
-        return 'Maria'
-    elif winnerCounter['Ben'] > winnerCounter['Maria']:
-        return 'Ben'
-    else:
+    if not nums or x < 1:
         return None
 
-
-def isRoundWinner(n, x):
-    list = [i for i in range(1, n + 1)]
-    players = ['Maria', 'Ben']
-
-    for i in range(n):
-        currentPlayer = players[i % 2]
-        selectedIdxs = []
-        prime = -1
-        for idx, num in enumerate(list):
-
-            if prime != -1:
-                if num % prime == 0:
-                    selectedIdxs.append(idx)
-            else:
-                if isPrime(num):
-                    selectedIdxs.append(idx)
-                    prime = num
-        if prime == -1:
-            if currentPlayer == players[0]:
-                return players[1]
-            else:
-                return players[0]
-        else:
-            for idx, val in enumerate(selectedIdxs):
-                del list[val - idx]
-    return None
-
-
-def isPrime(n):
-    if n == 1 or n == 0 or (n % 2 == 0 and n > 2):
-        return False
-    else:
-        for i in range(3, int(n**(1/2))+1, 2):
-            if n % i == 0:
-                return "Not a prime number"
+    def is_prime(num):
+        if num < 2:
+            return False
+        for i in range(2, int(num**0.5) + 1):
+            if num % i == 0:
+                return False
         return True
+
+    def play_game(n):
+        primes = [i for i in range(2, n+1) if is_prime(i)]
+        turn = 0  
+        while primes:
+            chosen_prime = primes[0]
+            primes = [p for p in primes if p % chosen_prime != 0]
+            turn = 1 - turn  
+        return turn  
+
+    maria_wins = 0
+    ben_wins = 0
+
+    for n in nums:
+        winner = play_game(n)
+        if winner == 0:
+            maria_wins += 1
+        elif winner == 1:
+            ben_wins += 1
+
+    if maria_wins > ben_wins:
+        return "Maria"
+    elif maria_wins < ben_wins:
+        return "Ben"
+    else:
+        return None

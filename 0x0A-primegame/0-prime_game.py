@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Module for solving the prime game question."""
 
-def is_winner(x, nums):
+def isWinner(x, nums):
     """Determine the winner of the prime game."""
     if not nums or x < 1:
         return None

@@ -1,27 +1,39 @@
 #!/usr/bin/python3
 
-def isWinner(x, nums):
-    if not nums or x < 1:
-        return None
-    largest = max(nums)
+# x is the number of rounds
+# nums is an array of n
 
-    filtered_nums = [True for _ in range(max(largest + 1, 2))]
-    for i in range(2, int(pow(largest, 0.5)) + 1):
-        if not filtered_nums[i]:
-            continue
-        for j in range(i * i, largest + 1, i):
-            filtered_nums[j] = False
-    filtered_nums[0] = filtered_nums[1] = False
-    y = 0
-    for i in range(len(filtered_nums)):
-        if filtered_nums[i]:
-            y += 1
-        filtered_nums[i] = y
-    player1 = 0
-    for x in nums:
-        player1 += filtered_nums[x] % 2 == 1
-    if player1 * 2 == len(nums):
-        return None
-    if player1 * 2 > len(nums):
+def is_prime(n):
+    if n <= 1:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def sieve_of_eratosthenes(n):
+    primes = []
+    multiples = set()
+    for i in range(2, n+1):
+        if i not in multiples:
+            primes.append(i)
+            multiples.update(range(i*i, n+1, i))
+    return primes
+
+def isWinner(x, nums):
+    maria_wins = 0
+    ben_wins = 0
+    for n in nums:
+        primes = sieve_of_eratosthenes(n)
+        
+        if len(primes) % 2 != 0:
+            maria_wins += 1
+        else:
+            ben_wins += 1
+    if maria_wins > ben_wins:
         return "Maria"
-    return "Ben"
+    elif ben_wins > maria_wins:
+        return "Ben"
+    else:
+        return None
+

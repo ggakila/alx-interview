@@ -1,39 +1,42 @@
 #!/usr/bin/python3
-""" Module for solving prime game question """
+"""Module for solving the prime game question."""
 
-def is_prime(n):
-    """Check if a number is prime."""
-    if n <= 1:
-        return False
-    for i in range(2, int(n**0.5) + 1):
-        if n % i == 0:
-            return False
-    return True
+def is_winner(x, nums):
+    """Determine the winner of the prime game.
 
-def sieve_of_eratosthenes(n):
-    """Sieve of Eratosthenes to generate list of prime numbers."""
-    primes = []
-    multiples = set()
-    for i in range(2, n+1):
-        if i not in multiples:
-            primes.append(i)
-            multiples.update(range(i*i, n+1, i))
-    return primes
+    Args:
+        x (of type int): represents the number of rounds.
+        nums (of type list): Numbers representing the game rounds.
 
-def isWinner(x, nums):
-    """Check for the winner of the game."""
-    maria_wins = 0
-    ben_wins = 0
-    for n in nums:
-        primes = sieve_of_eratosthenes(n)
-        if len(primes) % 2 != 0:
-            maria_wins += 1
-        else:
-            ben_wins += 1
-    if maria_wins > ben_wins:
-        return "Maria"
-    elif ben_wins > maria_wins:
-        return "Ben"
-    else:
+    Returns:
+        str: Returns Ben or Maria based on who won the most rounds or None if tied.
+    """
+    if not nums or x < 1:
         return None
+
+    largest_number = max(nums)
+    prime_filter = [True] * max(largest_number + 1, 2)
+    for i in range(2, int(pow(largest_number, 0.5)) + 1):
+        if not prime_filter[i]:
+            continue
+        for j in range(i * i, largest_number + 1, i):
+            prime_filter[j] = False
+    prime_filter[0] = prime_filter[1] = False
+
+    prime_count = 0
+    for i in range(len(prime_filter)):
+        if prime_filter[i]:
+            prime_count += 1
+        prime_filter[i] = prime_count
+
+    maria_wins = 0
+    for number in nums:
+        maria_wins += prime_filter[number] % 2 == 1
+
+    if maria_wins * 2 == len(nums):
+        return None
+    if maria_wins * 2 > len(nums):
+        return "Maria"
+    return "Ben"
+
 
